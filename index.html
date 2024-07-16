@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Currency Converter</h1>
+            <img src="images/notes.png" alt="" width="80px">
+        </div>
+
+        <div>
+            <p class="label">Amount</p>
+            <form action="">
+                <input type="number" id="inputAmount" required placeholder="Enter a amount">
+            </form>
+        </div>
+
+        <div class="selectContainer">
+            <div>
+                <p class="label">From</p>
+                <select name="from" id="fromSelectElement"></select>
+            </div>
+            <div>
+                <p class="label">To</p>
+                <select id="toSelectElement"></select>
+            </div>
+        </div>
+        <button class="btn" type="submit" onclick="convert();">Convert</button>
+        <div class="resultBox">
+            <!-- <p class="label" >Result</p> -->
+            <div>
+                <h1 id="resultContainer"></h1>
+                <p id="conversionTypeContainer"></p>
+                <p id="errorMsg"></p>
+            </div>
+        </div>
+        <p id="rateContainer"></p>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                var res = await fetch("https://v6.exchangerate-api.com/v6/00bf5ca59a0c3a975e2532dc/latest/USD");
+                var data = await res.json();
+                var currencyData = data.conversion_rates;
+
+                const fromSelectElement = document.getElementById('fromSelectElement');
+                const toSelectElement = document.getElementById('toSelectElement');
+
+                const currencyNames = Object.keys(currencyData);
+
+                currencyNames.forEach(currencyName => {
+                    const fromOption = document.createElement('option');
+                    fromOption.value = currencyName;
+                    fromOption.textContent = currencyName;
+                    fromSelectElement.appendChild(fromOption);
+
+                    const toOption = document.createElement('option');
+                    toOption.value = currencyName;
+                    toOption.textContent = currencyName;
+                    toSelectElement.appendChild(toOption);
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', fetchData);
+
+        async function calculateResult(from, to, amount) {
+            try {
+                var res = await fetch("https://v6.exchangerate-api.com/v6/00bf5ca59a0c3a975e2532dc/pair/" + from + "/" + to + "/" + amount);
+                const data = await res.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                return null;
+            }
+        }
+
+        async function convert() {
+            const from = document.getElementById('fromSelectElement').value;
+            const to = document.getElementById('toSelectElement').value;
+            const inputAmount = document.getElementById('inputAmount').value;
+            const resultContainer = document.getElementById('resultContainer');
+            const conversionTypeContainer = document.getElementById('conversionTypeContainer');
+
+            if (inputAmount != "" && inputAmount != 0) {
+                const response = await calculateResult(from, to, inputAmount);
+                const result = response.conversion_result;
+                const rate = response.conversion_rate;;
+
+                resultContainer.innerText = result.toFixed(2);
+                conversionTypeContainer.innerText = from + " to " + to;
+                document.getElementById('errorMsg').textContent = null;
+                document.getElementById('rateContainer').textContent = "Current conversion rate is " + rate.toFixed(2) + " " + to;
+            } else {
+                document.getElementById('errorMsg').textContent = "You must have to enter a valid amount";
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>
