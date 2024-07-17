@@ -12,7 +12,7 @@
     <div class="container">
         <div class="header">
             <h1>Currency Converter</h1>
-            <img src="images/notes.png" alt="" width="80px">
+            <img src="images/icon.png" alt="" width="80px">
         </div>
 
         <div>
@@ -42,6 +42,7 @@
             </div>
         </div>
         <p id="rateContainer"></p>
+        <p id="srcContainer"></p>
     </div>
 
     <script>
@@ -90,6 +91,9 @@
             const inputAmount = document.getElementById('inputAmount').value;
             const resultContainer = document.getElementById('resultContainer');
             const conversionTypeContainer = document.getElementById('conversionTypeContainer');
+            const srcContainer = document.getElementById('srcContainer');
+
+            // <p id="srcContainer">source: <a href="https://www.exchangerate.com/"> https://www.exchangerate.com/</a></p>
 
             if (inputAmount != "" && inputAmount != 0) {
                 const response = await calculateResult(from, to, inputAmount);
@@ -100,8 +104,17 @@
                 conversionTypeContainer.innerText = from + " to " + to;
                 document.getElementById('errorMsg').textContent = null;
                 document.getElementById('rateContainer').textContent = "Current conversion rate is " + rate.toFixed(2) + " " + to;
+
+                const link = document.createElement('a');
+                link.target = "_blank"
+                link.href = "https://www.exchangerate.com/";
+                link.textContent = "https://www.exchangerate.com";
+                srcContainer.textContent = "Source: ";
+                srcContainer.appendChild(link);
+
             } else {
                 document.getElementById('errorMsg').textContent = "You must have to enter a valid amount";
+                srcContainer.innerHTML = null;
             }
 
         }
