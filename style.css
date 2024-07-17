@@ -15,7 +15,7 @@ body {
 }
 
 .container {
-    padding: 30px 40px;
+    padding: 10px 40px;
     display: flex;
     flex-direction: column;
     gap: 36px;
@@ -78,9 +78,11 @@ select:focus {
     justify-content: center;
     align-items: center;
     color: white;
+    padding: 14px 0;
 }
 
 .resultBox {
+    padding: 10px 0;
     color: rgb(255, 231, 186);
     text-align: center;
     display: flex;
@@ -110,6 +112,25 @@ select:focus {
 
 .border {
     border: 1px solid lightslategray;
+}
+
+#srcContainer {
+    color: rgb(178, 178, 178);
+    font-size: small;
+    padding-top: 20px;
+    text-align: center;
+
+}
+
+#srcContainer a {
+    color: gray;
+    font-size: small;
+    text-decoration: none;
+}
+
+#srcContainer a:hover {
+    color: rgb(7, 115, 223);
+    text-decoration: underline;
 }
 
 
